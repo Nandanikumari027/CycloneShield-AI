@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CycloneShield AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div>
+            <h1>🌪️ CycloneShield AI</h1>
+            <p>Cyclone Impact & Infrastructure Vulnerability Forecaster</p>
+        </div>
+
+        <div class="status">
+            ● AI MODEL ONLINE
+        </div>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="main-grid">
+
+        <!-- LEFT SIDE : INPUT PANEL -->
+        <div class="input-card">
+
+            <h2>🌦️ Cyclone Parameters</h2>
+            <p class="card-subtitle">
+                Enter environmental and infrastructure data
+            </p>
+
+            <form action="/predict" method="POST">
+
+                <label>Wind Speed (km/h)</label>
+                <input
+                type="number"
+                name="wind_speed"
+                id="wind_speed"
+                step="0.1"
+                min="0"
+                value="{{ wind_speed if wind_speed is defined else '' }}"
+                required
+                >
+                    <button type="button" onclick="getLiveWeather()">
+                        🌦️ Get Live Weather
+                    </button>
+
+                <label>Rainfall (mm)</label>
+                <input
+                type="number"
+                name="rainfall"
+                id="rainfall"
+                step="0.1"
+                min="0"
+                value="{{ rainfall if rainfall is defined else '' }}"
+                required
+                >
+
+                <label>Distance from Coast (km)</label>
+                <input type="number"
+                       name="distance_from_coast"
+                       value="{{ distance_from_coast if distance_from_coast is defined else '' }}"
+                       required>
+
+                <label>Infrastructure Age (years)</label>
+                <input type="number"
+                       name="infrastructure_age"
+                       value="{{ infrastructure_age if infrastructure_age is defined else '' }}"
+                       required>
+
+                <label>Population Density</label>
+                <input type="number"
+                       name="population_density"
+                       value="{{ population_density if population_density is defined else '' }}"
+                       required>
+
+                <label>Cyclone Intensity (1-5)</label>
+                <input type="number"
+                       name="cyclone_intensity"
+                       min="1"
+                       max="5"
+                       value="{{ cyclone_intensity if cyclone_intensity is defined else '' }}"
+                       required>
+
+                <button type="submit">
+                    🔍 Predict Vulnerability
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- RIGHT SIDE : PREDICTION -->
+        <div class="prediction-card">
+
+            {% if prediction %}
+
+                <h2>AI Risk Assessment</h2>
+
+                <div class="risk-result">
+                    <span>Predicted Risk</span>
+
+                    <h1>{{ prediction }}</h1>
+                </div>
+
+                <div class="confidence">
+                    <p>
+                        Model Confidence:
+                        <strong>{{ confidence }}%</strong>
+                    </p>
+
+                    <div class="risk-meter">
+                        <div class="risk-fill"
+                             style="width: {{ confidence }}%;">
+                        </div>
+                    </div>
+                </div>
+
+
+                <h3>⚠️ Key Risk Factors</h3>
+
+                <ul class="risk-reasons">
+
+                    {% for reason in reasons %}
+
+                        <li>{{ reason }}</li>
+
+                    {% endfor %}
+
+                </ul>
+                <h3>🛡️ Recommended Actions</h3>
+                <ul class="recommendations">
+                    {% for recommendation in recommendations %}
+                    <li>{{ recommendation }}</li>
+                    {% endfor %}
+                </ul>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="big-icon">🛰️</div>
+
+                    <h2>Ready for Analysis</h2>
+
+                    <p>
+                        Enter cyclone and infrastructure parameters
+                        to generate an AI-based vulnerability assessment.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- MAP -->
+    <div class="map-section">
+
+        <div class="section-heading">
+
+            <div>
+                <h2>🗺️ Infrastructure Vulnerability Map</h2>
+
+                <p>
+                    Estimated cyclone impact zones
+                </p>
+            </div>
+
+            <span class="prototype-label">
+                PROTOTYPE MAP
+            </span>
+
+        </div>
+
+
+    <div class="risk-map
+    {% if prediction == 'HIGH RISK' %}
+        selected-high
+    {% elif prediction == 'MEDIUM RISK' %}
+        selected-medium
+    {% elif prediction == 'LOW RISK' %}
+        selected-low
+    {% endif %}">
+        <div class="coastline"></div>
+
+        <div class="cyclone">
+        🌪️
+            <span>Cyclone</span>
+        </div>
+
+        <div class="impact-zone high-zone">
+        HIGH
+        </div>
+
+        <div class="impact-zone medium-zone">
+        MEDIUM
+        </div>
+
+        <div class="impact-zone low-zone">
+        LOW
+        </div>
+
+        <div class="location-marker marker-1">
+        📍
+        </div>
+
+        <div class="location-marker marker-2">
+        📍
+        </div>
+
+        <div class="location-marker marker-3">
+        📍
+        </div>
+
+    </div>
+
+
+        <div class="map-legend">
+
+            <span>🔴 High Risk</span>
+
+            <span>🟡 Medium Risk</span>
+
+            <span>🟢 Low Risk</span>
+
+        </div>
+
+    </div>
+    <!-- TECHNOLOGY & FEATURES -->
+
+<div class="info-section">
+
+    <h2>🚀 System Overview</h2>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI / Machine Learning</h3>
+            <p>Random Forest classifier predicts infrastructure vulnerability.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌦️</div>
+            <h3>Weather Analysis</h3>
+            <p>Uses wind speed, rainfall and cyclone intensity as inputs.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🏗️</div>
+            <h3>Infrastructure Risk</h3>
+            <p>Considers infrastructure age, coastal distance and population density.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🗺️</div>
+            <h3>Impact Visualization</h3>
+            <p>Displays estimated cyclone impact zones using an interactive-style map.</p>
+        </div>
+
+    </div>
+
+    <div class="tech-stack">
+
+        <span>🐍 Python</span>
+        <span>🧠 Scikit-learn</span>
+        <span>🌐 Flask</span>
+        <span>🎨 HTML & CSS</span>
+        <span>🌲 Random Forest</span>
+
+    </div>
+
+</div>
+
+
+    
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        CycloneShield AI • AI-powered disaster resilience prototype
+    </p>
+
+</footer>
+
+</div>
+    <footer>
+        <p>
+            CycloneShield AI • AI-powered disaster resilience prototype
+        </p>
+    </footer>
+
+</div>
+
+<script>
+function getLiveWeather() {
+
+    fetch("/weather")
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Weather API failed");
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            console.log(data);
+
+            document.getElementById("wind_speed").value = data.wind_speed;
+            document.getElementById("rainfall").value = data.rainfall;
+
+            alert(
+                "Live Weather Loaded!\n\n" +
+                "Wind Speed: " + data.wind_speed + " km/h\n" +
+                "Rainfall: " + data.rainfall + " mm"
+            );
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Unable to fetch live weather.");
+        });
+}
+</script>
+
+</body>
+</html>
+
+
+    
